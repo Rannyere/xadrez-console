@@ -13,34 +13,46 @@ namespace xadrez_console
                 PartidaDeXadrez partida = new PartidaDeXadrez();
 
                 while (!partida.Terminada)
-                {
-                    Console.Clear();
-                    Tela.imprimirTabuleiro(partida.Tab);
 
-                    Console.WriteLine();
+                    try
+                    {
+                        Console.Clear();
+                        Tela.imprimirTabuleiro(partida.Tab);
+                        Console.WriteLine();
+                        Console.WriteLine("Turno: " + partida.Turno);
+                        Console.WriteLine("Aguardando jogada: " + partida.JogadorAtual);
 
-                    Console.Write("Origem: ");
-                    Posicao origem = Tela.lerPosicaoXadrez().toPosicao();
+                        Console.WriteLine();
 
-                    bool[,] posicoesPossiveis = partida.Tab.peca(origem).movimentosPossiveis();
+                        Console.Write("Origem: ");
+                        Posicao origem = Tela.lerPosicaoXadrez().toPosicao();
+                        partida.validarPosicaoOrigem(origem);
 
-                    Console.Clear();
+                        bool[,] posicoesPossiveis = partida.Tab.peca(origem).movimentosPossiveis();
 
-                    Tela.imprimirTabuleiro(partida.Tab, posicoesPossiveis);
+                        Console.Clear();
 
-                    Console.WriteLine();
-                    Console.Write("Destino: ");
-                    Posicao destino = Tela.lerPosicaoXadrez().toPosicao();
+                        Tela.imprimirTabuleiro(partida.Tab, posicoesPossiveis);
 
-                    partida.executaMovimento(origem, destino);
-                }
+                        Console.WriteLine();
+                        Console.Write("Destino: ");
+                        Posicao destino = Tela.lerPosicaoXadrez().toPosicao();
+                        partida.validarPosicaoDestino(origem, destino);
 
+                        partida.realizajogada(origem, destino);
+                    }
+                    catch (TabuleiroException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine("Aperte uma tecla para realizar nova jogada!");
+                        Console.ReadLine();
+                    }
 
             }
             catch (TabuleiroException e)
             {
                 Console.WriteLine(e.Message);
             }
-        }
+}
     }
 }
